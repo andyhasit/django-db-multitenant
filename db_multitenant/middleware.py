@@ -32,14 +32,12 @@ except ImportError:
 
 from db_multitenant import utils
 
-
 class MultiTenantMiddleware(MiddlewareMixin):
     """Should be placed first in your middlewares.
 
     This middleware sets up the database and cache prefix from the request."""
     def process_request(self, request):
         mapper = utils.get_mapper()
-
         threadlocal = connection.get_threadlocal()
         threadlocal.set_tenant_name(mapper.get_tenant_name(request))
         threadlocal.set_dbname(mapper.get_dbname(request))
@@ -52,7 +50,6 @@ class MultiTenantMiddleware(MiddlewareMixin):
 
     def process_response(self, request, response):
         """Clears the database name and cache prefix on response.
-
         This is a precaution against the connection being reused without
         first calling set_dbname or set_tenant_name.
         """
